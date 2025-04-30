@@ -12,6 +12,7 @@ import { getQuoteCharacter } from './options/quoteCharacter';
 import { resolveRootPath } from './options/rootPath';
 import { purge } from './purge';
 import { Directory } from './interfaces/directory.interface';
+import { postFilterIdentity } from './modules';
 
 // TODO: Document how users can call this from their own code without using the CLI.
 // TODO: We might need to do some parameter validation for that.
@@ -68,6 +69,7 @@ export function Barrelsby(args: Arguments) {
       local: !!args.local,
       include: ([] as string[]).concat(args.include || []),
       exclude: ([] as string[]).concat(args.exclude || [], ['node_modules']),
+      postFilter: args.postFilter ?? postFilterIdentity,
     });
   });
 }

@@ -1,4 +1,5 @@
 import { Options } from 'yargs';
+import { PostFilterFunc } from '../modules';
 
 export type LocationOption = 'top' | 'below' | 'all' | 'replace' | 'branch';
 
@@ -23,6 +24,7 @@ export interface Arguments {
   location?: LocationOption;
   name?: string;
   noSemicolon?: boolean;
+  postFilter?: PostFilterFunc;
   singleQuotes?: boolean;
   structure?: StructureOption;
   version?: boolean;

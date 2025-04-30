@@ -15,7 +15,7 @@ describe('builder/fileSystem module has a', () => {
           '"',
           ';',
           logger,
-          undefined
+          undefined,
         );
       });
       it('should produce the correct output', () => {
@@ -37,7 +37,7 @@ export const directory3 = {
   program: directory3programts,
 };
 export {indexts as index};
-`
+`,
         );
       });
       it('should produce output compatible with the recommended tslint ruleset', () => {
@@ -57,7 +57,7 @@ export {indexts as index};
         "'",
         ';',
         logger,
-        undefined
+        undefined,
       );
     });
     it('should produce the correct output', () => {
@@ -79,7 +79,7 @@ export const directory3 = {
   program: directory3programts,
 };
 export {indexts as index};
-`
+`,
       );
     });
     it('should produce output compatible with the recommended tslint ruleset', () => {
@@ -98,7 +98,7 @@ export {indexts as index};
         '"',
         '',
         logger,
-        undefined
+        undefined,
       );
     });
     it('should produce the correct output', () => {
@@ -120,7 +120,7 @@ export const directory3 = {
   program: directory3programts,
 }
 export {indexts as index}
-`
+`,
       );
     });
   });

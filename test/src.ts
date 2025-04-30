@@ -1,5 +1,5 @@
 import { compareSync, fileCompareHandlers } from 'dir-compare';
-import { lstatSync, readdirSync } from 'fs';
+import { lstatSync, readdirSync, existsSync } from 'fs';
 import { copy } from 'fs-extra';
 import { join } from 'path';
 import Yargs from 'yargs';
@@ -23,7 +23,13 @@ Promise.all(
     .map(name => join(location, name))
     .filter(path => lstatSync(path).isDirectory())
     .map(async directory => {
-      const args: Arguments = await Yargs.parse(['--config', join(directory, 'barrelsby.json')]);
+      let configFile = join(directory, 'barrelsby.json')
+
+      if (existsSync(join(directory, 'barrelsby.js'))) {
+        configFile = join(directory, 'barrelsby.js')
+      }
+
+      const args: Arguments = await Yargs.parse(['--config', configFile]);
       args.directory = Array.isArray(args.directory)
         ? args.directory.map((dir: string) => join(directory, dir))
         : join(directory, args.directory as string);

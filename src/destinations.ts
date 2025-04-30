@@ -9,7 +9,7 @@ export function getDestinations(
   rootTree: Directory,
   locationOption: LocationOption,
   barrelName: string,
-  logger: Logger
+  logger: Logger,
 ): Directory[] {
   let destinations: Directory[];
   switch (locationOption) {

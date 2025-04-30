@@ -8,6 +8,7 @@ import { convertPathSeparator, thisDirectory } from './utilities';
 import { buildBarrel } from './tasks/BuildBarrel';
 import { Directory } from './interfaces/directory.interface';
 import { FileTreeLocation } from './interfaces/location.interface';
+import { PostFilterFunc } from './modules';
 
 export const build = (params: {
   addHeader: boolean;
@@ -23,6 +24,7 @@ export const build = (params: {
   local: boolean;
   include: string[];
   exclude: string[];
+  postFilter: PostFilterFunc;
 }): void => {
   try {
     // Build the barrels.
@@ -41,7 +43,8 @@ export const build = (params: {
         local: params.local,
         include: params.include,
         exclude: params.exclude,
-      })
+        postFilter: params.postFilter,
+      }),
     );
   } catch (e) {
     // tslint:disable-next-line:no-console
@@ -56,7 +59,7 @@ export type BarrelBuilder = (
   semicolonCharacter: SemicolonCharacter,
   logger: Logger,
   baseUrl: BaseUrl,
-  exportDefault: boolean
+  exportDefault: boolean,
 ) => string;
 
 /** Builds the TypeScript */

@@ -10,6 +10,7 @@ import * as RootPath from './options/rootPath';
 import * as Purge from './purge';
 import Sinon from 'sinon';
 import * as Builder from './builder';
+import { postFilterIdentity } from './modules';
 
 describe('main module', () => {
   let spySandbox: Sinon.SinonSandbox;
@@ -91,6 +92,7 @@ describe('main module', () => {
       local: args.local,
       include: args.include,
       exclude: [...args.exclude, 'node_modules'],
+      postFilter: postFilterIdentity,
     });
   });
 });

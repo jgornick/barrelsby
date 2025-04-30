@@ -24,7 +24,7 @@ describe('builder/flat module has a', () => {
           signale,
           undefined,
           false,
-          false
+          false,
         );
       });
       afterEach(() => {
@@ -38,7 +38,7 @@ export * from "./index";
 export * from "./directory2/script";
 export * from "./directory2/directory4/deeplyNested";
 export * from "./directory3/program";
-`
+`,
         );
       });
       it('should log useful information to the logger', () => {
@@ -76,7 +76,7 @@ export * from "./directory3/program";
           signale,
           undefined,
           false,
-          false
+          false,
         );
       });
       afterEach(() => {
@@ -90,7 +90,7 @@ export * from './index';
 export * from './directory2/script';
 export * from './directory2/directory4/deeplyNested';
 export * from './directory3/program';
-`
+`,
         );
       });
       it('should log useful information to the logger', () => {
@@ -128,7 +128,7 @@ export * from './directory3/program';
           signale,
           undefined,
           false,
-          false
+          false,
         );
       });
       afterEach(() => {
@@ -142,7 +142,7 @@ export * from "./index"
 export * from "./directory2/script"
 export * from "./directory2/directory4/deeplyNested"
 export * from "./directory3/program"
-`
+`,
         );
       });
       it('should log useful information to the logger', () => {
@@ -175,7 +175,7 @@ export * from "./directory3/program"
           signale,
           undefined,
           true,
-          false
+          false,
         );
       });
       afterEach(() => {
@@ -194,7 +194,7 @@ export { default as deeplyNested } from "./directory2/directory4/deeplyNested";
 export * from "./directory2/directory4/deeplyNested";
 export { default as program } from "./directory3/program";
 export * from "./directory3/program";
-`
+`,
         );
       });
 
@@ -211,7 +211,7 @@ export * from "./directory3/program";
           path: './directory1',
         };
 
-        const output = Flat.buildFlatBarrel(
+        const fileWithNumberOutput = Flat.buildFlatBarrel(
           directory,
           TestUtilities.mockModules(directory),
           '"',
@@ -219,14 +219,14 @@ export * from "./directory3/program";
           signale,
           undefined,
           true,
-          false
+          false,
         );
 
         TestUtilities.assertMultiLine(
-          output,
+          fileWithNumberOutput,
           `export { default as fileWithNumber1 } from "./file-with-number-1";
 export * from "./file-with-number-1";
-`
+`,
         );
       });
 
@@ -250,7 +250,7 @@ export * from "./file-with-number-1";
           signale,
           undefined,
           true,
-          true
+          true,
         );
       });
       afterEach(() => {
@@ -269,7 +269,7 @@ export { default as directory2Directory4DeeplyNested } from "./directory2/direct
 export * from "./directory2/directory4/deeplyNested";
 export { default as directory3Program } from "./directory3/program";
 export * from "./directory3/program";
-`
+`,
         );
       });
       it('should produce output compatible with the recommended tslint ruleset', () => {

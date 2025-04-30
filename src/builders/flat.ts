@@ -27,7 +27,7 @@ export function buildFlatBarrel(
   logger: Logger,
   baseUrl: BaseUrl,
   exportDefault: boolean,
-  fullPathname: boolean
+  fullPathname: boolean,
 ): string {
   return modules.reduce((previous: string, current: FileTreeLocation) => {
     const importPath = buildImportPath(directory, current, baseUrl);

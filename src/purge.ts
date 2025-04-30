@@ -10,7 +10,7 @@ export function purge(
   shouldPurge: boolean,
   noHeader: boolean,
   barrelName: string,
-  logger: Logger
+  logger: Logger,
 ) {
   // Delete any existing barrels.
   if (shouldPurge) {

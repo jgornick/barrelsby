@@ -45,7 +45,8 @@ describe('builder/builder module has a', () => {
           local: boolean;
           include: string[];
           exclude: string[];
-        }
+          postFilter: Modules.PostFilterFunc;
+        },
       ],
       void
     >;
@@ -67,6 +68,7 @@ describe('builder/builder module has a', () => {
         local: false,
         include: [],
         exclude: [],
+        postFilter: Modules.postFilterIdentity,
       });
     };
     beforeEach(() => {
@@ -156,6 +158,7 @@ describe('builder/builder module has a', () => {
         local: false,
         include: [],
         exclude: [],
+        postFilter: Modules.postFilterIdentity,
       });
     };
     beforeEach(() => {

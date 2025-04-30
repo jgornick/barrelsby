@@ -2,6 +2,7 @@ import * as Modules from './modules';
 import { Logger } from './options/logger';
 import * as TestUtilities from './testUtilities';
 import { Directory } from './interfaces/directory.interface';
+import { FileTreeLocation } from './interfaces/location.interface';
 
 describe('builder/modules module has a', () => {
   describe('loadDirectoryModules function that', () => {
@@ -16,7 +17,14 @@ describe('builder/modules module has a', () => {
       loggerSpy = jest.spyOn(logger, 'debug');
     });
     it('should identify modules from directories recursively', () => {
-      const result = Modules.loadDirectoryModules(directory.directories[0], logger, [], [], false);
+      const result = Modules.loadDirectoryModules(
+        directory.directories[0],
+        logger,
+        [],
+        [],
+        Modules.postFilterIdentity,
+        false,
+      );
       expect(result.length).toBe(2);
       expect(result[0]).toEqual({
         name: 'script.ts',
@@ -28,7 +36,14 @@ describe('builder/modules module has a', () => {
       });
     });
     it('should not identify modules recursively if the local flag is set', () => {
-      const result = Modules.loadDirectoryModules(directory.directories[0], logger, [], [], true);
+      const result = Modules.loadDirectoryModules(
+        directory.directories[0],
+        logger,
+        [],
+        [],
+        Modules.postFilterIdentity,
+        true,
+      );
       expect(result.length).toBe(1);
       expect(result[0]).toEqual({
         name: 'script.ts',
@@ -40,7 +55,14 @@ describe('builder/modules module has a', () => {
       const targetDirectory = directory.directories[0];
       targetDirectory.barrel = targetDirectory.files[0];
 
-      const result = Modules.loadDirectoryModules(directory.directories[0], logger, [], [], false);
+      const result = Modules.loadDirectoryModules(
+        directory.directories[0],
+        logger,
+        [],
+        [],
+        Modules.postFilterIdentity,
+        false,
+      );
       expect(result.length).toBe(1);
       expect(result[0]).toEqual({
         name: 'script.ts',
@@ -48,11 +70,18 @@ describe('builder/modules module has a', () => {
       });
     });
     it('should only include TypeScript files', () => {
-      const result = Modules.loadDirectoryModules(directory, logger, [], [], false);
+      const result = Modules.loadDirectoryModules(directory, logger, [], [], Modules.postFilterIdentity, false);
       result.forEach(location => expect(location.name).not.toEqual('ignore.txt'));
     });
     it('should only include files matching a whitelist option when specified', () => {
-      const result = Modules.loadDirectoryModules(directory, logger, ['directory2'], [], false);
+      const result = Modules.loadDirectoryModules(
+        directory,
+        logger,
+        ['directory2'],
+        [],
+        Modules.postFilterIdentity,
+        false,
+      );
       expect(result.length).toBe(2);
       expect(result[0]).toEqual({
         name: 'script.ts',
@@ -64,7 +93,14 @@ describe('builder/modules module has a', () => {
       });
     });
     it('should exclude files matching a blacklist option when specified', () => {
-      const result = Modules.loadDirectoryModules(directory, logger, [], ['directory2'], false);
+      const result = Modules.loadDirectoryModules(
+        directory,
+        logger,
+        [],
+        ['directory2'],
+        Modules.postFilterIdentity,
+        false,
+      );
       expect(result.length).toBe(3);
       expect(result[0]).toEqual({
         name: 'barrel.ts',
@@ -80,7 +116,14 @@ describe('builder/modules module has a', () => {
       });
     });
     it('should correctly handle both whitelist and blacklist options being set', () => {
-      const result = Modules.loadDirectoryModules(directory, logger, ['directory2'], ['directory4'], false);
+      const result = Modules.loadDirectoryModules(
+        directory,
+        logger,
+        ['directory2'],
+        ['directory4'],
+        Modules.postFilterIdentity,
+        false,
+      );
       expect(result.length).toBe(1);
       expect(result[0]).toEqual({
         name: 'script.ts',
@@ -92,8 +135,44 @@ describe('builder/modules module has a', () => {
       const indexedDirectory = directory.directories[0];
       indexedDirectory.barrel = indexedDirectory.files[0];
 
-      Modules.loadDirectoryModules(directory, logger, [], [], false);
+      Modules.loadDirectoryModules(directory, logger, [], [], Modules.postFilterIdentity, false);
       expect(loggerSpy).toBeCalledTimes(4);
+    });
+    it('should handle post filter function being set', () => {
+      const mockDirectory: Directory = {
+        directories: [],
+        files: [
+          {
+            name: 'file.native.ts',
+            path: 'directory1/file.native.ts',
+          },
+          {
+            name: 'file.ts',
+            path: 'directory1/file.ts',
+          },
+          {
+            name: 'index.ts',
+            path: 'directory1/index.ts',
+          },
+        ],
+        name: 'directory1',
+        path: './directory1',
+      };
+
+      const postFilter = (locations: FileTreeLocation[]) => {
+        return locations.filter(({ name }) => name !== 'file.ts');
+      };
+
+      const result = Modules.loadDirectoryModules(mockDirectory, logger, [], [], postFilter, false);
+      expect(result.length).toBe(2);
+      expect(result[0]).toEqual({
+        name: 'file.native.ts',
+        path: 'directory1/file.native.ts',
+      });
+      expect(result[1]).toEqual({
+        name: 'index.ts',
+        path: 'directory1/index.ts',
+      });
     });
   });
 });

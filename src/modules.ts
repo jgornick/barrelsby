@@ -8,6 +8,29 @@ interface Filters {
   whitelists: RegExp[];
 }
 
+/**
+ * Represents the `postFilter` function signature.
+ */
+export type PostFilterFunc = (
+  /**
+   * The file locations parsed by {@link getModules}.
+   */
+  locations: FileTreeLocation[],
+
+  /**
+   * The default logger instance.
+   */
+  logger?: Logger,
+) => FileTreeLocation[];
+
+/**
+ * Identity function to perform no filter on locations.
+ *
+ * @param locations The file locations parsed by {@link getModules}.
+ * @returns The locations argument.
+ */
+export const postFilterIdentity: PostFilterFunc = locations => locations;
+
 // Get any typescript modules contained at any depth in the current directory.
 function getModules(directory: Directory, logger: Logger, local: boolean): FileTreeLocation[] {
   logger.debug(`Getting modules @ ${directory.path}`);
@@ -70,11 +93,14 @@ export function loadDirectoryModules(
   logger: Logger,
   include: string[],
   exclude: string[],
-  local: boolean
+  postFilter: PostFilterFunc,
+  local: boolean,
 ): FileTreeLocation[] {
   const modules = getModules(directory, logger, local);
 
   const filters = buildFilters(include, exclude);
 
-  return filterModules(filters, modules, logger);
+  const locations = filterModules(filters, modules, logger);
+
+  return postFilter(locations, logger);
 }

@@ -1,9 +1,19 @@
-import fs from 'fs';
+import { lilconfigSync } from 'lilconfig';
 import Yargs from 'yargs';
 import { Arguments, getOptionsConfig } from './options/options';
 
 const configParser = (configPath: string): any => {
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  const loader = lilconfigSync('barrelsby', {
+    searchPlaces: ['barrelsby.json', 'barrelsby.js'],
+  });
+
+  const configResult = loader.load(configPath);
+
+  if (configResult === null) {
+    throw new Error('Invalid config path provided.');
+  }
+
+  const { config } = configResult;
 
   // Backwards compatibility for directory string, as opposed to an array
   if (config.directory && typeof config.directory === 'string') {
